@@ -38,14 +38,13 @@ public class PostController {
     @PutMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostDTO> editPost(@RequestBody PostDTO post) {
-        // @TODO: Finish this
-        return null;
+        PostDTO editedPost = postService.editPost(post);
+        return new ResponseEntity<>(editedPost, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<PostDTO> deletePost(@PathVariable Long id) {
-        // @TODO: Finish this
-        return null;
+    public void deletePost(@PathVariable Long id) {
+        postService.deletePost(id);
     }
 }
