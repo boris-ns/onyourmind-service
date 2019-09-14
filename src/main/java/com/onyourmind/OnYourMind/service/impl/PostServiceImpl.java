@@ -1,14 +1,15 @@
 package com.onyourmind.OnYourMind.service.impl;
 
 import com.onyourmind.OnYourMind.common.TimeProvider;
+import com.onyourmind.OnYourMind.common.UserHelper;
 import com.onyourmind.OnYourMind.dto.PostDTO;
+import com.onyourmind.OnYourMind.exception.ApiRequestException;
 import com.onyourmind.OnYourMind.exception.ResourceNotFoundException;
 import com.onyourmind.OnYourMind.model.Post;
 import com.onyourmind.OnYourMind.model.User;
 import com.onyourmind.OnYourMind.repository.PostRepository;
 import com.onyourmind.OnYourMind.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private TimeProvider timeProvider;
+
+    @Autowired
+    private UserHelper userHelper;
 
 
     @Override
@@ -46,7 +50,7 @@ public class PostServiceImpl implements PostService {
         newPost.setDislikes(0);
         newPost.setEnabled(true);
 
-        User author = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User author = userHelper.getCurrentUser();
         newPost.setAuthor(author);
 
         postRepository.save(newPost);
@@ -55,14 +59,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(Long id) throws ResourceNotFoundException {
+    public void deletePost(Long id) throws ApiRequestException {
         Post post = this.getPostFromRepository(id);
+        User currentUser = userHelper.getCurrentUser();
+
+        if (!post.getAuthor().equals(currentUser))
+            throw new ApiRequestException("This user can't delete post with ID " + id);
+
         postRepository.delete(post);
     }
 
     @Override
-    public PostDTO editPost(PostDTO post) throws ResourceNotFoundException {
+    public PostDTO editPost(PostDTO post) throws ApiRequestException {
         Post postToEdit = this.getPostFromRepository(post.getId());
+        User currentUser = userHelper.getCurrentUser();
+
+        if (!postToEdit.getAuthor().equals(currentUser))
+            throw new ApiRequestException("This user can't edit post with ID " + post.getId());
+
         postToEdit.setText(post.getText());
         postRepository.save(postToEdit);
 
