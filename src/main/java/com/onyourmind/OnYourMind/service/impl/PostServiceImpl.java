@@ -83,7 +83,7 @@ public class PostServiceImpl implements PostService {
         return new PostDTO(postToEdit);
     }
 
-    private Post getPostFromRepository(Long id) throws ResourceNotFoundException {
+    public Post getPostFromRepository(Long id) throws ResourceNotFoundException {
         try {
             Post post = postRepository.findById(id).get();
             return post;

@@ -11,6 +11,7 @@ public class PostCommentDTO {
     private Date dateTime;
     private String authorName;
     private Long authorId;
+    private Long postId;
 
     public PostCommentDTO() {
     }
@@ -21,6 +22,7 @@ public class PostCommentDTO {
         this.dateTime = comment.getDateTime();
         this.authorName = comment.getAuthor().getFirstName() + " " + comment.getAuthor().getLastName();
         this.authorId = comment.getAuthor().getId();
+        this.postId = comment.getPost().getId();
     }
 
     public Long getId() {
@@ -61,5 +63,13 @@ public class PostCommentDTO {
 
     public void setAuthorId(Long authorId) {
         this.authorId = authorId;
+    }
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 }

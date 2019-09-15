@@ -8,4 +8,7 @@ public interface PostCommentService {
 
     PostCommentDTO findById(Long id);
     List<PostCommentDTO> findAll();
+    PostCommentDTO addComment(PostCommentDTO comment);
+    void deleteComment(Long id);
+    PostCommentDTO editComment(PostCommentDTO comment);
 }
