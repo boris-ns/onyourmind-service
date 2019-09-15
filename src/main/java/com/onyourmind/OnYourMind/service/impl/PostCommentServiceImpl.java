@@ -7,6 +7,7 @@ import com.onyourmind.OnYourMind.exception.ApiRequestException;
 import com.onyourmind.OnYourMind.exception.ResourceNotFoundException;
 import com.onyourmind.OnYourMind.model.Post;
 import com.onyourmind.OnYourMind.model.PostComment;
+import com.onyourmind.OnYourMind.model.User;
 import com.onyourmind.OnYourMind.repository.PostCommentRepository;
 import com.onyourmind.OnYourMind.service.PostCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class PostCommentServiceImpl implements PostCommentService {
         if (comment.getPostId() == null)
             throw new ApiRequestException("Post ID must be available in request.");
 
-        if (comment.getText().isEmpty())
+        if (comment.getText() == null || comment.getText().isEmpty())
             throw new ApiRequestException("Text can't be empty");
 
         PostComment newComment = new PostComment();
@@ -66,14 +67,34 @@ public class PostCommentServiceImpl implements PostCommentService {
     }
 
     @Override
-    public void deleteComment(Long id) {
-        // @TODO: Finish this
+    public void deleteComment(Long id) throws ApiRequestException {
+        PostComment comment = getCommentFromRepository(id);
+        User currentUser = userHelper.getCurrentUser();
+
+        if (!comment.getAuthor().equals(currentUser))
+            throw new ApiRequestException("This user can't delete comment with ID " + id);
+
+        postCommentRepository.delete(comment);
     }
 
     @Override
-    public PostCommentDTO editComment(PostCommentDTO comment) {
-        // @TODO: Finish this
-        return null;
+    public PostCommentDTO editComment(PostCommentDTO comment) throws ApiRequestException {
+        if (comment.getId() == null)
+            throw new ApiRequestException("You must send Comment ID");
+
+        if (comment.getText() == null || comment.getText().isEmpty())
+            throw new ApiRequestException("Text can't be empty");
+
+        PostComment commentToEdit = this.getCommentFromRepository(comment.getId());
+        User currentUser = userHelper.getCurrentUser();
+
+        if (!commentToEdit.getAuthor().equals(currentUser))
+            throw new ApiRequestException("This user can't edit comment with ID " + comment.getId());
+
+        commentToEdit.setText(comment.getText());
+        postCommentRepository.save(commentToEdit);
+
+        return new PostCommentDTO(commentToEdit);
     }
 
     private PostComment getCommentFromRepository(Long id) throws ResourceNotFoundException {

@@ -35,4 +35,17 @@ public class PostCommentController {
         PostCommentDTO newComment = commentsService.addComment(comment);
         return new ResponseEntity<>(newComment, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void deleteComment(@PathVariable Long id) {
+        commentsService.deleteComment(id);
+    }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<PostCommentDTO> editComment(@RequestBody PostCommentDTO comment) {
+        PostCommentDTO newComment = commentsService.editComment(comment);
+        return new ResponseEntity<>(newComment, HttpStatus.OK);
+    }
 }
