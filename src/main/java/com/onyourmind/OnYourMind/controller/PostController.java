@@ -47,4 +47,16 @@ public class PostController {
     public void deletePost(@PathVariable Long id) {
         postService.deletePost(id);
     }
+
+    @PutMapping("/deactivate/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void deactivatePost(@PathVariable Long id) {
+        postService.changePostEnabledStatus(id, false);
+    }
+
+    @PutMapping("/activate/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void activatePost(@PathVariable Long id) {
+        postService.changePostEnabledStatus(id, true);
+    }
 }

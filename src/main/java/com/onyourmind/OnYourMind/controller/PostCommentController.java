@@ -48,4 +48,16 @@ public class PostCommentController {
         PostCommentDTO newComment = commentsService.editComment(comment);
         return new ResponseEntity<>(newComment, HttpStatus.OK);
     }
+
+    @PutMapping("/deactivate/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void deactivateComment(@PathVariable Long id) {
+        commentsService.changeCommentEnabledStatus(id, false);
+    }
+
+    @PutMapping("/activate/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void activateComment(@PathVariable Long id) {
+        commentsService.changeCommentEnabledStatus(id, true);
+    }
 }

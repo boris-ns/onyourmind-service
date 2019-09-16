@@ -57,6 +57,7 @@ public class PostCommentServiceImpl implements PostCommentService {
         newComment.setDateTime(timeProvider.now());
         newComment.setAuthor(userHelper.getCurrentUser());
         newComment.setText(comment.getText());
+        newComment.setEnabled(true);
 
         Post post = postService.getPostFromRepository(comment.getPostId());
         newComment.setPost(post);
@@ -95,6 +96,13 @@ public class PostCommentServiceImpl implements PostCommentService {
         postCommentRepository.save(commentToEdit);
 
         return new PostCommentDTO(commentToEdit);
+    }
+
+    @Override
+    public void changeCommentEnabledStatus(Long id, boolean status) {
+        PostComment comment = this.getCommentFromRepository(id);
+        comment.setEnabled(status);
+        postCommentRepository.save(comment);
     }
 
     private PostComment getCommentFromRepository(Long id) throws ResourceNotFoundException {

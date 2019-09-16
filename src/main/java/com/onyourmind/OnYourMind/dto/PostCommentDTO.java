@@ -12,6 +12,7 @@ public class PostCommentDTO {
     private String authorName;
     private Long authorId;
     private Long postId;
+    private boolean enabled;
 
     public PostCommentDTO() {
     }
@@ -23,6 +24,7 @@ public class PostCommentDTO {
         this.authorName = comment.getAuthor().getFirstName() + " " + comment.getAuthor().getLastName();
         this.authorId = comment.getAuthor().getId();
         this.postId = comment.getPost().getId();
+        this.enabled = comment.isEnabled();
     }
 
     public Long getId() {
@@ -71,5 +73,13 @@ public class PostCommentDTO {
 
     public void setPostId(Long postId) {
         this.postId = postId;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

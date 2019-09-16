@@ -83,6 +83,13 @@ public class PostServiceImpl implements PostService {
         return new PostDTO(postToEdit);
     }
 
+    @Override
+    public void changePostEnabledStatus(Long id, boolean status) {
+        Post post = this.getPostFromRepository(id);
+        post.setEnabled(status);
+        postRepository.save(post);
+    }
+
     public Post getPostFromRepository(Long id) throws ResourceNotFoundException {
         try {
             Post post = postRepository.findById(id).get();

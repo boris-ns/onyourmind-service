@@ -19,12 +19,16 @@ public class PostComment {
     @Column(name = "dateTime", nullable = false)
     private Date dateTime;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
+
 
     public PostComment() {
     }
@@ -67,6 +71,14 @@ public class PostComment {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

@@ -11,4 +11,5 @@ public interface PostService {
     PostDTO addPost(PostDTO post);
     void deletePost(Long id);
     PostDTO editPost(PostDTO post);
+    void changePostEnabledStatus(Long id, boolean status);
 }

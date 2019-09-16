@@ -11,4 +11,5 @@ public interface PostCommentService {
     PostCommentDTO addComment(PostCommentDTO comment);
     void deleteComment(Long id);
     PostCommentDTO editComment(PostCommentDTO comment);
+    void changeCommentEnabledStatus(Long id, boolean status);
 }
