@@ -45,7 +45,7 @@ public class User implements UserDetails {
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
-    private List<Authority> authorities;
+    private Set<Authority> authorities = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "author")
     private Set<Post> posts = new HashSet<>();
@@ -95,8 +95,12 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
+    }
+
+    public Set<Authority> getUsersAuthorities() {
+        return this.authorities;
     }
 
     public String getEmail() {

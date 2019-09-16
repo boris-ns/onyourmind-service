@@ -1,5 +1,6 @@
 package com.onyourmind.OnYourMind.service.impl;
 
+import com.onyourmind.OnYourMind.dto.UserDTO;
 import com.onyourmind.OnYourMind.model.User;
 import com.onyourmind.OnYourMind.repository.UserRepository;
 import org.apache.commons.logging.Log;
@@ -59,4 +60,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
 }
