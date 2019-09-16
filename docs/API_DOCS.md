@@ -1,8 +1,146 @@
 # Auth
-Work in progress
+## Login
+```POST http://localhost:8080/auth/login```  
+Request:  
+```json
+{
+	"username":"john.doe",
+	"password":"123"
+}
+```
+Response:  
+```json
+{
+    "id": 1,
+    "username": "john.doe",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john@doe.com",
+    "enabled": true,
+    "authorities": [
+        "ROLE_USER"
+    ],
+    "token": {
+        "accessToken": "JWT_TOKEN_VALUE",
+        "expiresIn": 3600000
+    }
+}
+```
+
+## Refresh token
+```POST http://localhost:8080/auth/refresh```  
+Authentication: you must send JWT with request  
+Response:  
+```json
+{
+    "accessToken": "JWT_TOKEN_VALUE",
+    "expiresIn": 3600000
+}
+```
+
+## Change password
+```POST http://localhost:8080/auth/change-password```  
+Authentication: you must send JWT with request  
+Request:  
+```json
+{
+    "oldPassword": "12345",
+    "newPassword": "asdfg"
+}
+```
+Response: 200 OK or exception
 
 # Users
-Work in progress
+## Get all users
+```GET http://localhost:8080/api/users```  
+Authorization: *ROLE_ADMIN*  
+Response: 
+```json
+[
+    {
+        "id": 1,
+        "username": "jane.doe",
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "email": "jane@doe.com",
+        "enabled": true,
+        "authorities": [
+            "ROLE_USER"
+        ],
+        "token": null
+    },
+    ...
+]
+```
+
+## Register new user
+```POST http://localhost:8080/api/users/public/add-user```  
+Request:  
+```json
+{
+	"username": "jane.doe",
+	"password": "123",
+	"firstName": "Jane",
+	"lastName": "Doe",
+	"email": "jane@doe.com"
+}  
+```  
+Response:  
+```json
+{
+    "id": 1,
+    "username": "jane.doe",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "email": "jane@doe.com",
+    "enabled": true,
+    "authorities": [
+        "ROLE_USER"
+    ],
+    "token": null
+}
+```
+
+## Register new admin
+```POST http://localhost:8080/api/users/add-admin```  
+Authorization: *ROLE_ADMIN*  
+Request:  
+```json
+{
+	"username": "jane.doe",
+	"password": "123",
+	"firstName": "Jane",
+	"lastName": "Doe",
+	"email": "jane@doe.com"
+}  
+```  
+Response:  
+```json
+{
+    "id": 1,
+    "username": "jane.doe",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "email": "jane@doe.com",
+    "enabled": true,
+    "authorities": [
+        "ROLE_ADMIN"
+    ],
+    "token": null
+}
+```
+
+## Deactivate user
+```PUT http://localhost:8080/api/users/deactivate/{USER_ID}```  
+Authorization: *ROLE_ADMIN*  
+Response: 200 OK or exception  
+Changes 'enabled' flag to false
+
+## Activate user
+```PUT http://localhost:8080/api/users/activate/{USER_ID}```  
+Authorization: *ROLE_ADMIN*  
+Response: 200 OK or exception  
+Changes 'enabled' flag to true
 
 # Posts
 ## Get 1 post
