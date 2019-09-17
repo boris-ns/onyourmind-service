@@ -29,6 +29,11 @@ public class PostCommentController {
         return new ResponseEntity<>(commentsService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/public/user/{id}")
+    public ResponseEntity<List<PostCommentDTO>> getCommentsFromUser(@PathVariable Long id) {
+        return new ResponseEntity<>(commentsService.findAllCommentsFromUser(id), HttpStatus.OK);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostCommentDTO> addComment(@RequestBody PostCommentDTO comment) {

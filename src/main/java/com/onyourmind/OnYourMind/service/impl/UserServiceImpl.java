@@ -39,13 +39,18 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User findById(Long id) throws AccessDeniedException {
-        return userRepository.findById(id).get();
+    public UserDTO findById(Long id) {
+        return new UserDTO(getUserFromRepository(id));
     }
 
     @Override
-    public User findByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+    public UserDTO findByUsername(String username) throws ApiRequestException {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null)
+            throw new ApiRequestException("User with username '" + username + "' doesn't exist.");
+
+        return new UserDTO(user);
     }
 
     @Override
@@ -96,7 +101,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    private User getUserFromRepository(Long id) throws ResourceNotFoundException {
+    public User getUserFromRepository(Long id) throws ResourceNotFoundException {
         try {
             User user = userRepository.findById(id).get();
             return user;

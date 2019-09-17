@@ -19,6 +19,11 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
+    @GetMapping("/public/{id}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+    }
+
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {

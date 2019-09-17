@@ -28,6 +28,11 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
+    @GetMapping("/public/user/{id}")
+    public ResponseEntity<List<PostDTO>> getPostsFromUser(@PathVariable Long id) {
+        return new ResponseEntity<>(postService.findAllPostsFromUser(id), HttpStatus.OK);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostDTO> addPost(@RequestBody PostDTO post) {

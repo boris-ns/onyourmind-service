@@ -32,6 +32,9 @@ public class PostCommentServiceImpl implements PostCommentService {
     @Autowired
     private PostServiceImpl postService;
 
+    @Autowired
+    private UserServiceImpl userService;
+
 
     @Override
     public PostCommentDTO findById(Long id) {
@@ -103,6 +106,13 @@ public class PostCommentServiceImpl implements PostCommentService {
         PostComment comment = this.getCommentFromRepository(id);
         comment.setEnabled(status);
         postCommentRepository.save(comment);
+    }
+
+    @Override
+    public List<PostCommentDTO> findAllCommentsFromUser(Long id) {
+        User user = userService.getUserFromRepository(id);
+        return user.getComments().stream()
+                .map(comment -> new PostCommentDTO(comment)).collect(Collectors.toList());
     }
 
     private PostComment getCommentFromRepository(Long id) throws ResourceNotFoundException {

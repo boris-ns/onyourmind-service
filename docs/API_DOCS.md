@@ -51,6 +51,24 @@ Request:
 Response: 200 OK or exception
 
 # Users
+## Get 1 user
+```GET http://localhost:8080/api/users/public/{USER_ID}```  
+Response:  
+```json
+{
+    "id": 1,
+    "username": "jane.doe",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "email": "jane@doe.com",
+    "enabled": true,
+    "authorities": [
+        "ROLE_USER"
+    ],
+    "token": null
+}
+```
+
 ## Get all users
 ```GET http://localhost:8080/api/users```  
 Authorization: *ROLE_ADMIN*  
@@ -69,7 +87,7 @@ Response:
         ],
         "token": null
     },
-    ...
+    /* ... */
 ]
 ```
 
@@ -174,6 +192,10 @@ Response:
 ```GET http://localhost:8080/api/posts/public```  
 Response: List of all post objects, see example response above
 
+## Get all posts from user
+```GET http://localhost:8080/api/posts/public/user/{USER_ID}```  
+Response: list of all post objects, see example response above
+
 ## Add post
 ```POST http://localhost:8080/api/posts```  
 Authorization: *ROLE_USER*  
@@ -260,6 +282,10 @@ Response:
 ## Get all comments
 ```GET http://localhost:8080/api/comments/public```  
 Response: List of Comment objects (see above)
+
+## Get all comments from user
+```GET http://localhost:8080/api/comments/public/user/{USER_ID}```  
+Response: List of Comment objects (see above)  
 
 ## Add comment
 ```POST http://localhost:8080/api/comments```  

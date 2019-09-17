@@ -23,6 +23,9 @@ public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
 
     @Autowired
+    private UserServiceImpl userService;
+
+    @Autowired
     private TimeProvider timeProvider;
 
     @Autowired
@@ -88,6 +91,13 @@ public class PostServiceImpl implements PostService {
         Post post = this.getPostFromRepository(id);
         post.setEnabled(status);
         postRepository.save(post);
+    }
+
+    @Override
+    public List<PostDTO> findAllPostsFromUser(Long id) {
+        User user = userService.getUserFromRepository(id);
+        return user.getPosts().stream()
+                .map(post -> new PostDTO(post)).collect(Collectors.toList());
     }
 
     public Post getPostFromRepository(Long id) throws ResourceNotFoundException {

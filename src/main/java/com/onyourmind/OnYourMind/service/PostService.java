@@ -12,4 +12,5 @@ public interface PostService {
     void deletePost(Long id);
     PostDTO editPost(PostDTO post);
     void changePostEnabledStatus(Long id, boolean status);
+    List<PostDTO> findAllPostsFromUser(Long id);
 }

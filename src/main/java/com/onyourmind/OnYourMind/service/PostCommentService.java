@@ -12,4 +12,5 @@ public interface PostCommentService {
     void deleteComment(Long id);
     PostCommentDTO editComment(PostCommentDTO comment);
     void changeCommentEnabledStatus(Long id, boolean status);
+    List<PostCommentDTO> findAllCommentsFromUser(Long id);
 }
