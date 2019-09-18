@@ -59,20 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CorsFilter corsFilter() {
-//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        final CorsConfiguration config = new CorsConfiguration();
-//
-//        config.setAllowCredentials(true);
-//        config.setAllowedOrigins(Collections.singletonList("*"));
-//        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "X-Auth-Token"));
-//        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
-//        source.registerCorsConfiguration("/**", config);
-//
-//        return new CorsFilter(source);
-
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setMaxAge(1800L);
@@ -89,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
             .cors().and()
-                
+
             // Allow all users to access URLs that have 'public' in them
             // Allow auth
             .authorizeRequests()
