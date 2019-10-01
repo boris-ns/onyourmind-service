@@ -34,7 +34,6 @@ public class PostController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostDTO> addPost(@RequestBody PostDTO post) {
         PostDTO newPost = postService.addPost(post);
         return new ResponseEntity<>(newPost, HttpStatus.OK);

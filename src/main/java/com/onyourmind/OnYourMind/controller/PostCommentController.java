@@ -35,7 +35,6 @@ public class PostCommentController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostCommentDTO> addComment(@RequestBody PostCommentDTO comment) {
         PostCommentDTO newComment = commentsService.addComment(comment);
         return new ResponseEntity<>(newComment, HttpStatus.OK);
