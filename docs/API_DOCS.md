@@ -223,7 +223,6 @@ Response: list of all post objects, see example response above
 
 ## Add post
 ```POST http://localhost:8080/api/posts```  
-Authorization: *ROLE_USER*  
 Request:  
 ```json
 {
@@ -314,7 +313,6 @@ Response: List of Comment objects (see above)
 
 ## Add comment
 ```POST http://localhost:8080/api/comments```  
-Authorization: *ROLE_USER*  
 Request:  
 ```json
 {
