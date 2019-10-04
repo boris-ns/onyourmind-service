@@ -13,4 +13,5 @@ public interface UserService {
     UserDTO addRegularUser(UserRegistrationDTO userInfo);
     UserDTO addAdminUser(UserRegistrationDTO userInfo);
     void changeUserEnabledStatus(Long id, boolean status);
+    UserDTO editUser(UserDTO user);
 }

@@ -1,6 +1,7 @@
 package com.onyourmind.OnYourMind.service.impl;
 
 import com.onyourmind.OnYourMind.common.TimeProvider;
+import com.onyourmind.OnYourMind.common.UserHelper;
 import com.onyourmind.OnYourMind.common.consts.UserRoles;
 import com.onyourmind.OnYourMind.dto.UserDTO;
 import com.onyourmind.OnYourMind.dto.UserRegistrationDTO;
@@ -36,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private TimeProvider timeProvider;
+
+    @Autowired
+    private UserHelper userHelper;
 
 
     @Override
@@ -99,6 +103,17 @@ public class UserServiceImpl implements UserService {
         User user = this.getUserFromRepository(id);
         user.setEnabled(status);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO editUser(UserDTO user) {
+        User userInfo = userHelper.getCurrentUser();
+
+        userInfo.setFirstName(user.getFirstName());
+        userInfo.setLastName(user.getLastName());
+        userInfo.setEmail(user.getEmail());
+
+        return new UserDTO(userInfo);
     }
 
     public User getUserFromRepository(Long id) throws ResourceNotFoundException {

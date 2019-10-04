@@ -36,6 +36,12 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @PutMapping
+    public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO user) {
+        UserDTO newUserInfo = userService.editUser(user);
+        return new ResponseEntity<>(newUserInfo, HttpStatus.OK);
+    }
+
     @PostMapping("/add-admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> addAdminUser(@RequestBody UserRegistrationDTO userInfo) {

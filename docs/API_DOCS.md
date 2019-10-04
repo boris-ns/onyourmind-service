@@ -148,6 +148,31 @@ Response:
 }
 ```
 
+## Edit user
+```PUT http://localhost:8080/api/users```  
+Authorization: Every registered user can do this  
+Request:  
+```json
+{
+    "firstName": "newFirstName",
+    "lastName": "newLastName",
+    "email": "new@email.com"
+}
+```  
+Response:  
+```json
+ "id": 1,
+    "username": "jane.doe",
+    "firstName": "newFirstName",
+    "lastName": "newLastName",
+    "email": "new@email.com",
+    "enabled": true,
+    "authorities": [
+        "ROLE_ADMIN"
+    ],
+    "token": null
+```
+
 ## Deactivate user
 ```PUT http://localhost:8080/api/users/deactivate/{USER_ID}```  
 Authorization: *ROLE_ADMIN*  
