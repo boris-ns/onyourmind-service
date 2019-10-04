@@ -13,7 +13,7 @@ First, you need to clone this repository
 
 ```git clone https://github.com/boris-ns/onyourmind-service.git```  
 
-Then in ```src/main/resources/application.properties``` enter your database username and password.  
+Then in ```src/main/resources/application.properties``` enter your database username, database password, email and email password.  
 
 After that, you can run the service
 

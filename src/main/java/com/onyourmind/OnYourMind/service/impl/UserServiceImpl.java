@@ -41,6 +41,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserHelper userHelper;
 
+    @Autowired
+    private MailSenderService mailSenderService;
+
 
     @Override
     public UserDTO findById(Long id) {
@@ -67,6 +70,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO addRegularUser(UserRegistrationDTO userInfo) {
         User user = this.createNewUserObject(userInfo, UserRoles.ROLE_USER);
         userRepository.save(user);
+        mailSenderService.sendMailForRegistration(user.getEmail());
 
         return new UserDTO(user);
     }
