@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OnYourMind - Account verification</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+        function getParamFromUrl(name){
+            const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return results[1] || 0;
+        }
+
+        function verifyAccount(userId) {
+            $.get(`/api/users/public/verify/${userId}`, function(data, status) {
+                $('#verification-status').text('Your account is activated.');
+            }).fail(function() {
+                $('#verification-status').text('There was an error while activating your account');
+            });
+        }
+
+        $(document).ready(function() {
+            const userId = getParamFromUrl('id');
+            verifyAccount(userId);
+        });
+
+    </script>
+
+</head>
+<body>
+
+    <h1>OnYourMind - Account Verification</h1>
+
+    <h2 id="verification-status"></h2>
+
+    <a href="http://localhost:4200/">OnYourMind web application</a>
+
+</body>
+</html>

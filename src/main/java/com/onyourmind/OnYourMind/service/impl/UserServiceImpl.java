@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO addRegularUser(UserRegistrationDTO userInfo) {
         User user = this.createNewUserObject(userInfo, UserRoles.ROLE_USER);
         userRepository.save(user);
-        mailSenderService.sendMailForRegistration(user.getEmail());
+        mailSenderService.sendMailForRegistration(user);
 
         return new UserDTO(user);
     }
@@ -79,6 +79,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO addAdminUser(UserRegistrationDTO userInfo) {
         User user = this.createNewUserObject(userInfo, UserRoles.ROLE_ADMIN);
         userRepository.save(user);
+        mailSenderService.sendMailForRegistration(user);
 
         return new UserDTO(user);
     }
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userInfo.getFirstName());
         user.setLastName(userInfo.getLastName());
         user.setEmail(userInfo.getEmail());
-        user.setEnabled(true);
+        user.setEnabled(false);
         user.setLastPasswordResetDate(timeProvider.nowTimestamp());
 
         Authority regularUserAuthority = authorityRepository.findByName(roleName);

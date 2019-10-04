@@ -49,6 +49,11 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @GetMapping("/public/verify/{id}")
+    public void verifyAccount(@PathVariable Long id) {
+        userService.changeUserEnabledStatus(id, true);
+    }
+
     @PutMapping("/activate/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void activateUser(@PathVariable Long id) {
