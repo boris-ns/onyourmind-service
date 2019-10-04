@@ -185,6 +185,11 @@ Authorization: *ROLE_ADMIN*
 Response: 200 OK or exception  
 Changes 'enabled' flag to true
 
+## Verify user's account
+```GET http://localhost:8080/api/users/public/verify/{USER_ID}```  
+Response: 200 OK or exception  
+Changes 'enabled' flag to true
+
 # Posts
 ## Get 1 post
 ```GET http://localhost:8080/api/posts/public/{POST_ID}```  
