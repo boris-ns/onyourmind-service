@@ -380,7 +380,7 @@ Changes 'enabled' flag to true
 
 # File store
 
-## Upload image
-```POST http://localhost:8080/api/images```  
+## Upload user profile image
+```POST http://localhost:8080/api/images/users```  
 You must be logged in. Send form-data (multipart file).  
 Response: 200 OK or exception  
