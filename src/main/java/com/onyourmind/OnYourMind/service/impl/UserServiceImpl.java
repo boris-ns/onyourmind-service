@@ -13,9 +13,8 @@ import com.onyourmind.OnYourMind.repository.AuthorityRepository;
 import com.onyourmind.OnYourMind.repository.UserRepository;
 import com.onyourmind.OnYourMind.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private MailSenderService mailSenderService;
+
+    @Value("${user.default-profile-image}")
+    private String defaultProfileImage;
 
 
     @Override
@@ -96,6 +98,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userInfo.getEmail());
         user.setEnabled(false);
         user.setLastPasswordResetDate(timeProvider.nowTimestamp());
+        user.setProfileImagePath(defaultProfileImage);
 
         Authority regularUserAuthority = authorityRepository.findByName(roleName);
         user.getUsersAuthorities().add(regularUserAuthority);
@@ -119,6 +122,13 @@ public class UserServiceImpl implements UserService {
         userInfo.setEmail(user.getEmail());
 
         return new UserDTO(userInfo);
+    }
+
+    @Override
+    public void setProfileImage(String imagePath) {
+        User user = userHelper.getCurrentUser();
+        user.setProfileImagePath(imagePath);
+        userRepository.save(user);
     }
 
     public User getUserFromRepository(Long id) throws ResourceNotFoundException {

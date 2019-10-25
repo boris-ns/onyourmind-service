@@ -377,3 +377,10 @@ Changes 'enabled' flag to false
 Authorization: *ROLE_ADMIN*  
 Response: 200 OK or exception  
 Changes 'enabled' flag to true
+
+# File store
+
+## Upload image
+```POST http://localhost:8080/api/images```  
+You must be logged in. Send form-data (multipart file).  
+Response: 200 OK or exception  

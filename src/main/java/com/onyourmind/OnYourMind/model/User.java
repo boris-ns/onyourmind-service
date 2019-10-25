@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @Column(name = "profile_image_path", nullable = false)
+    private String profileImagePath;
+
     @Column(name = "last_password_reset_date", nullable = false)
     private Timestamp lastPasswordResetDate;
 
@@ -165,6 +168,14 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    public String getProfileImagePath() {
+        return profileImagePath;
+    }
+
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 
     @Override
