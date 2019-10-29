@@ -15,4 +15,5 @@ public interface UserService {
     void changeUserEnabledStatus(Long id, boolean status);
     UserDTO editUser(UserDTO user);
     void setProfileImage(String imagePath);
+    void verifyUserAccount(String token);
 }

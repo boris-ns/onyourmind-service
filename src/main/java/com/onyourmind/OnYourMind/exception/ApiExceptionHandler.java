@@ -24,8 +24,9 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorMessage, notFoundStatus);
     }
 
-    @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception e) {
+        System.out.println(e);
+
         HttpStatus internalServerErrorCode = HttpStatus.INTERNAL_SERVER_ERROR;
         ErrorMessage errorMessage = new ErrorMessage("Internal server error.", internalServerErrorCode, ZonedDateTime.now());
         return new ResponseEntity<>(errorMessage, internalServerErrorCode);

@@ -49,9 +49,9 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/public/verify/{id}")
-    public void verifyAccount(@PathVariable Long id) {
-        userService.changeUserEnabledStatus(id, true);
+    @GetMapping("/public/verify/{token}")
+    public void verifyAccount(@PathVariable String token) {
+        userService.verifyUserAccount(token);
     }
 
     @PutMapping("/activate/{id}")

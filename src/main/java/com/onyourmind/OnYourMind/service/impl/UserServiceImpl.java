@@ -8,8 +8,10 @@ import com.onyourmind.OnYourMind.dto.UserRegistrationDTO;
 import com.onyourmind.OnYourMind.exception.ApiRequestException;
 import com.onyourmind.OnYourMind.exception.ResourceNotFoundException;
 import com.onyourmind.OnYourMind.model.Authority;
+import com.onyourmind.OnYourMind.model.ConfirmationToken;
 import com.onyourmind.OnYourMind.model.User;
 import com.onyourmind.OnYourMind.repository.AuthorityRepository;
+import com.onyourmind.OnYourMind.repository.ConfirmationTokenRepository;
 import com.onyourmind.OnYourMind.repository.UserRepository;
 import com.onyourmind.OnYourMind.service.UserService;
 import com.onyourmind.OnYourMind.service.email.MailSenderService;
@@ -19,6 +21,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -31,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private ConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -73,7 +79,9 @@ public class UserServiceImpl implements UserService {
     public UserDTO addRegularUser(UserRegistrationDTO userInfo) {
         User user = this.createNewUserObject(userInfo, UserRoles.ROLE_USER);
         userRepository.save(user);
-        mailSenderService.sendMailForRegistration(user);
+
+        ConfirmationToken token = this.createConfirmationToken(user);
+        mailSenderService.sendMailForRegistration(user, token);
 
         return new UserDTO(user);
     }
@@ -82,9 +90,16 @@ public class UserServiceImpl implements UserService {
     public UserDTO addAdminUser(UserRegistrationDTO userInfo) {
         User user = this.createNewUserObject(userInfo, UserRoles.ROLE_ADMIN);
         userRepository.save(user);
-        mailSenderService.sendMailForRegistration(user);
+
+        ConfirmationToken token = this.createConfirmationToken(user);
+        mailSenderService.sendMailForRegistration(user, token);
 
         return new UserDTO(user);
+    }
+
+    private ConfirmationToken createConfirmationToken(User user) {
+        ConfirmationToken confirmationToken = new ConfirmationToken(user);
+        return confirmationTokenRepository.save(confirmationToken);
     }
 
     private User createNewUserObject(UserRegistrationDTO userInfo, String roleName) throws ApiRequestException {
@@ -105,6 +120,29 @@ public class UserServiceImpl implements UserService {
         user.getUsersAuthorities().add(regularUserAuthority);
 
         return user;
+    }
+
+    @Override
+    public void verifyUserAccount(String token) {
+        ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token);
+
+        if (confirmationToken == null) {
+            throw new ResourceNotFoundException("Requested token doesn't exist.");
+        }
+
+        User user = confirmationToken.getUser();
+        Date now = timeProvider.now();
+        long timeDifference = now.getTime() - confirmationToken.getCreatedDatetime().getTime();
+        long timeDifferenceMinutes = timeDifference / (60 * 1000);
+
+        if (timeDifferenceMinutes < 15) {
+            user.setEnabled(true);
+            userRepository.save(user);
+        } else {
+            confirmationTokenRepository.delete(confirmationToken);
+            userRepository.delete(user);
+            throw new ApiRequestException("Confirmation token timed out.");
+        }
     }
 
     @Override

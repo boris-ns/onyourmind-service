@@ -1,5 +1,6 @@
 package com.onyourmind.OnYourMind.service.email;
 
+import com.onyourmind.OnYourMind.model.ConfirmationToken;
 import com.onyourmind.OnYourMind.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,13 +15,15 @@ public class MailSenderService {
     private JavaMailSender mailSender;
 
     @Async
-    public void sendMailForRegistration(final User user) {
+    public void sendMailForRegistration(final User user, final ConfirmationToken token) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setTo(user.getEmail());
         message.setFrom("OnYourMind");
-        message.setSubject("OnYourMind - Registration");
-        message.setText("Go to this address to activate your account http://localhost:8080/account-verification.html?id=" + user.getId());
+        message.setSubject("OnYourMind - Account activation");
+        message.setText("Dear " + user.getFirstName() + " " + user.getLastName() +
+                ", go to this address to activate your account " +
+                "http://localhost:8080/account-verification.html?token=" + token.getToken());
 
         mailSender.send(message);
     }

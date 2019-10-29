@@ -12,8 +12,8 @@
             return results[1] || 0;
         }
 
-        function verifyAccount(userId) {
-            $.get(`/api/users/public/verify/${userId}`, function(data, status) {
+        function verifyAccount(token) {
+            $.get(`/api/users/public/verify/${token}`, function(data, status) {
                 $('#verification-status').text('Your account is activated.');
             }).fail(function() {
                 $('#verification-status').text('There was an error while activating your account');
@@ -21,8 +21,8 @@
         }
 
         $(document).ready(function() {
-            const userId = getParamFromUrl('id');
-            verifyAccount(userId);
+            const token = getParamFromUrl('token');
+            verifyAccount(token);
         });
 
     </script>
