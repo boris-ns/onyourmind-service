@@ -13,14 +13,22 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {ApiRequestException.class})
     public ResponseEntity<Object> handleApiRequestException(ApiRequestException e) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ApiException apiException = new ApiException(e.getMessage(), badRequest, ZonedDateTime.now());
-        return new ResponseEntity<>(apiException, badRequest);
+        ErrorMessage errorMessage = new ErrorMessage(e.getMessage(), badRequest, ZonedDateTime.now());
+        return new ResponseEntity<>(errorMessage, badRequest);
     }
 
     @ExceptionHandler(value = {ResourceNotFoundException.class})
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException e) {
-        HttpStatus badRequest = HttpStatus.NOT_FOUND;
-        ApiException apiException = new ApiException(e.getMessage(), badRequest, ZonedDateTime.now());
-        return new ResponseEntity<>(apiException, badRequest);
+        HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
+        ErrorMessage errorMessage = new ErrorMessage(e.getMessage(), notFoundStatus, ZonedDateTime.now());
+        return new ResponseEntity<>(errorMessage, notFoundStatus);
     }
+
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity<Object> handleException(Exception e) {
+        HttpStatus internalServerErrorCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        ErrorMessage errorMessage = new ErrorMessage("Internal server error.", internalServerErrorCode, ZonedDateTime.now());
+        return new ResponseEntity<>(errorMessage, internalServerErrorCode);
+    }
+
 }
