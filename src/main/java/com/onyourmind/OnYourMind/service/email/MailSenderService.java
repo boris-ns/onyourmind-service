@@ -1,4 +1,4 @@
-package com.onyourmind.OnYourMind.service.impl;
+package com.onyourmind.OnYourMind.service.email;
 
 import com.onyourmind.OnYourMind.model.User;
 import org.springframework.beans.factory.annotation.Autowired;

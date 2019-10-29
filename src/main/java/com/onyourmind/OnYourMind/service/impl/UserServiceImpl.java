@@ -12,6 +12,7 @@ import com.onyourmind.OnYourMind.model.User;
 import com.onyourmind.OnYourMind.repository.AuthorityRepository;
 import com.onyourmind.OnYourMind.repository.UserRepository;
 import com.onyourmind.OnYourMind.service.UserService;
+import com.onyourmind.OnYourMind.service.email.MailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
