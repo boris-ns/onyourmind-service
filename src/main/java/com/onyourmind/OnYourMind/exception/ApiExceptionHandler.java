@@ -24,6 +24,7 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorMessage, notFoundStatus);
     }
 
+    @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception e) {
         System.out.println(e);
 
