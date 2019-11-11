@@ -37,19 +37,22 @@ public class PostCommentServiceImpl implements PostCommentService {
 
 
     @Override
-    public PostCommentDTO findById(Long id) {
-        PostComment comment = this.getCommentFromRepository(id);
-        return new PostCommentDTO(comment);
+    public PostComment findById(Long id) {
+        try {
+            PostComment comment = postCommentRepository.findById(id).get();
+            return comment;
+        } catch (NoSuchElementException e) {
+            throw new ResourceNotFoundException("Comment with ID " + id + " doesn't exist");
+        }
     }
 
     @Override
-    public List<PostCommentDTO> findAll() {
-        return postCommentRepository.findAll().stream()
-                .map(comment -> new PostCommentDTO(comment)).collect(Collectors.toList());
+    public List<PostComment> findAll() {
+        return postCommentRepository.findAll();
     }
 
     @Override
-    public PostCommentDTO addComment(PostCommentDTO comment) throws ApiRequestException {
+    public PostComment addComment(PostCommentDTO comment) throws ApiRequestException {
         if (comment.getPostId() == null)
             throw new ApiRequestException("Post ID must be available in request.");
 
@@ -62,17 +65,17 @@ public class PostCommentServiceImpl implements PostCommentService {
         newComment.setText(comment.getText());
         newComment.setEnabled(true);
 
-        Post post = postService.getPostFromRepository(comment.getPostId());
+        Post post = postService.findById(comment.getPostId());
         newComment.setPost(post);
 
         postCommentRepository.save(newComment);
 
-        return new PostCommentDTO(newComment);
+        return newComment;
     }
 
     @Override
     public void deleteComment(Long id) throws ApiRequestException {
-        PostComment comment = getCommentFromRepository(id);
+        PostComment comment = findById(id);
         User currentUser = userHelper.getCurrentUser();
 
         if (!comment.getAuthor().equals(currentUser))
@@ -82,14 +85,14 @@ public class PostCommentServiceImpl implements PostCommentService {
     }
 
     @Override
-    public PostCommentDTO editComment(PostCommentDTO comment) throws ApiRequestException {
+    public PostComment editComment(PostCommentDTO comment) throws ApiRequestException {
         if (comment.getId() == null)
             throw new ApiRequestException("You must send Comment ID");
 
         if (comment.getText() == null || comment.getText().isEmpty())
             throw new ApiRequestException("Text can't be empty");
 
-        PostComment commentToEdit = this.getCommentFromRepository(comment.getId());
+        PostComment commentToEdit = this.findById(comment.getId());
         User currentUser = userHelper.getCurrentUser();
 
         if (!commentToEdit.getAuthor().equals(currentUser))
@@ -98,29 +101,19 @@ public class PostCommentServiceImpl implements PostCommentService {
         commentToEdit.setText(comment.getText());
         postCommentRepository.save(commentToEdit);
 
-        return new PostCommentDTO(commentToEdit);
+        return commentToEdit;
     }
 
     @Override
     public void changeCommentEnabledStatus(Long id, boolean status) {
-        PostComment comment = this.getCommentFromRepository(id);
+        PostComment comment = this.findById(id);
         comment.setEnabled(status);
         postCommentRepository.save(comment);
     }
 
     @Override
-    public List<PostCommentDTO> findAllCommentsFromUser(Long id) {
-        User user = userService.getUserFromRepository(id);
-        return user.getComments().stream()
-                .map(comment -> new PostCommentDTO(comment)).collect(Collectors.toList());
-    }
-
-    private PostComment getCommentFromRepository(Long id) throws ResourceNotFoundException {
-        try {
-            PostComment comment = postCommentRepository.findById(id).get();
-            return comment;
-        } catch (NoSuchElementException e) {
-            throw new ResourceNotFoundException("Comment with ID " + id + " doesn't exist");
-        }
+    public List<PostComment> findAllCommentsFromUser(Long id) {
+        User user = userService.findById(id);
+        return user.getComments().stream().collect(Collectors.toList());
     }
 }

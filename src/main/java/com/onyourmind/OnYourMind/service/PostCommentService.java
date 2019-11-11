@@ -1,16 +1,17 @@
 package com.onyourmind.OnYourMind.service;
 
 import com.onyourmind.OnYourMind.dto.PostCommentDTO;
+import com.onyourmind.OnYourMind.model.PostComment;
 
 import java.util.List;
 
 public interface PostCommentService {
 
-    PostCommentDTO findById(Long id);
-    List<PostCommentDTO> findAll();
-    PostCommentDTO addComment(PostCommentDTO comment);
+    PostComment findById(Long id);
+    List<PostComment> findAll();
+    PostComment addComment(PostCommentDTO comment);
     void deleteComment(Long id);
-    PostCommentDTO editComment(PostCommentDTO comment);
+    PostComment editComment(PostCommentDTO comment);
     void changeCommentEnabledStatus(Long id, boolean status);
-    List<PostCommentDTO> findAllCommentsFromUser(Long id);
+    List<PostComment> findAllCommentsFromUser(Long id);
 }

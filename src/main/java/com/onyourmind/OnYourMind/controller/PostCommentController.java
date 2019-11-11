@@ -1,6 +1,8 @@
 package com.onyourmind.OnYourMind.controller;
 
 import com.onyourmind.OnYourMind.dto.PostCommentDTO;
+import com.onyourmind.OnYourMind.mappers.PostCommentMapper;
+import com.onyourmind.OnYourMind.model.PostComment;
 import com.onyourmind.OnYourMind.service.impl.PostCommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,24 +22,26 @@ public class PostCommentController {
 
     @GetMapping("/public/{id}")
     public ResponseEntity<PostCommentDTO> getComment(@PathVariable Long id) {
-        PostCommentDTO comment = commentsService.findById(id);
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        PostComment comment = commentsService.findById(id);
+        return new ResponseEntity<>(PostCommentMapper.toDto(comment), HttpStatus.OK);
     }
 
     @GetMapping("/public")
     public ResponseEntity<List<PostCommentDTO>> getAllComments() {
-        return new ResponseEntity<>(commentsService.findAll(), HttpStatus.OK);
+        List<PostComment> comments = commentsService.findAll();
+        return new ResponseEntity<>(PostCommentMapper.toListDto(comments), HttpStatus.OK);
     }
 
     @GetMapping("/public/user/{id}")
     public ResponseEntity<List<PostCommentDTO>> getCommentsFromUser(@PathVariable Long id) {
-        return new ResponseEntity<>(commentsService.findAllCommentsFromUser(id), HttpStatus.OK);
+        List<PostComment> comments = commentsService.findAllCommentsFromUser(id);
+        return new ResponseEntity<>(PostCommentMapper.toListDto(comments), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<PostCommentDTO> addComment(@RequestBody PostCommentDTO comment) {
-        PostCommentDTO newComment = commentsService.addComment(comment);
-        return new ResponseEntity<>(newComment, HttpStatus.OK);
+        PostComment newComment = commentsService.addComment(comment);
+        return new ResponseEntity<>(PostCommentMapper.toDto(newComment), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -49,8 +53,8 @@ public class PostCommentController {
     @PutMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostCommentDTO> editComment(@RequestBody PostCommentDTO comment) {
-        PostCommentDTO newComment = commentsService.editComment(comment);
-        return new ResponseEntity<>(newComment, HttpStatus.OK);
+        PostComment newComment = commentsService.editComment(comment);
+        return new ResponseEntity<>(PostCommentMapper.toDto(newComment), HttpStatus.OK);
     }
 
     @PutMapping("/deactivate/{id}")

@@ -33,19 +33,22 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public PostDTO findById(Long id) {
-        Post post = this.getPostFromRepository(id);
-        return new PostDTO(post);
+    public Post findById(Long id) {
+        try {
+            Post post = postRepository.findById(id).get();
+            return post;
+        } catch (NoSuchElementException e) {
+            throw new ResourceNotFoundException("Post with ID " + id + " doesn't exist.");
+        }
     }
 
     @Override
-    public List<PostDTO> findAll() {
-        return postRepository.findAll().stream()
-                .map(post -> new PostDTO(post)).collect(Collectors.toList());
+    public List<Post> findAll() {
+        return postRepository.findAll();
     }
 
     @Override
-    public PostDTO addPost(PostDTO post) {
+    public Post addPost(PostDTO post) {
         Post newPost = new Post();
         newPost.setText(post.getText());
         newPost.setDateTime(timeProvider.now());
@@ -58,12 +61,12 @@ public class PostServiceImpl implements PostService {
 
         postRepository.save(newPost);
 
-        return new PostDTO(newPost);
+        return newPost;
     }
 
     @Override
     public void deletePost(Long id) throws ApiRequestException {
-        Post post = this.getPostFromRepository(id);
+        Post post = this.findById(id);
         User currentUser = userHelper.getCurrentUser();
 
         if (!post.getAuthor().equals(currentUser))
@@ -73,8 +76,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO editPost(PostDTO post) throws ApiRequestException {
-        Post postToEdit = this.getPostFromRepository(post.getId());
+    public Post editPost(PostDTO post) throws ApiRequestException {
+        Post postToEdit = this.findById(post.getId());
         User currentUser = userHelper.getCurrentUser();
 
         if (!postToEdit.getAuthor().equals(currentUser))
@@ -83,29 +86,19 @@ public class PostServiceImpl implements PostService {
         postToEdit.setText(post.getText());
         postRepository.save(postToEdit);
 
-        return new PostDTO(postToEdit);
+        return postToEdit;
     }
 
     @Override
     public void changePostEnabledStatus(Long id, boolean status) {
-        Post post = this.getPostFromRepository(id);
+        Post post = this.findById(id);
         post.setEnabled(status);
         postRepository.save(post);
     }
 
     @Override
-    public List<PostDTO> findAllPostsFromUser(Long id) {
-        User user = userService.getUserFromRepository(id);
-        return user.getPosts().stream()
-                .map(post -> new PostDTO(post)).collect(Collectors.toList());
-    }
-
-    public Post getPostFromRepository(Long id) throws ResourceNotFoundException {
-        try {
-            Post post = postRepository.findById(id).get();
-            return post;
-        } catch (NoSuchElementException e) {
-            throw new ResourceNotFoundException("Post with ID " + id + " doesn't exist.");
-        }
+    public List<Post> findAllPostsFromUser(Long id) {
+        User user = userService.findById(id);
+        return user.getPosts().stream().collect(Collectors.toList());
     }
 }

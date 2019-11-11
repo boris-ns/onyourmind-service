@@ -1,6 +1,8 @@
 package com.onyourmind.OnYourMind.controller;
 
 import com.onyourmind.OnYourMind.dto.PostDTO;
+import com.onyourmind.OnYourMind.mappers.PostMapper;
+import com.onyourmind.OnYourMind.model.Post;
 import com.onyourmind.OnYourMind.service.impl.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,31 +21,33 @@ public class PostController {
 
     @GetMapping("/public")
     public ResponseEntity<List<PostDTO>> getAllPosts() {
-        return new ResponseEntity<>(postService.findAll(), HttpStatus.OK);
+        List<Post> posts = postService.findAll();
+        return new ResponseEntity<>(PostMapper.toListDto(posts), HttpStatus.OK);
     }
 
     @GetMapping("/public/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long id) {
-        PostDTO post = postService.findById(id);
-        return new ResponseEntity<>(post, HttpStatus.OK);
+        Post post = postService.findById(id);
+        return new ResponseEntity<>(PostMapper.toDto(post), HttpStatus.OK);
     }
 
     @GetMapping("/public/user/{id}")
     public ResponseEntity<List<PostDTO>> getPostsFromUser(@PathVariable Long id) {
-        return new ResponseEntity<>(postService.findAllPostsFromUser(id), HttpStatus.OK);
+        List<Post> posts = postService.findAllPostsFromUser(id);
+        return new ResponseEntity<>(PostMapper.toListDto(posts), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<PostDTO> addPost(@RequestBody PostDTO post) {
-        PostDTO newPost = postService.addPost(post);
-        return new ResponseEntity<>(newPost, HttpStatus.OK);
+        Post newPost = postService.addPost(post);
+        return new ResponseEntity<>(PostMapper.toDto(newPost), HttpStatus.OK);
     }
 
     @PutMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostDTO> editPost(@RequestBody PostDTO post) {
-        PostDTO editedPost = postService.editPost(post);
-        return new ResponseEntity<>(editedPost, HttpStatus.OK);
+        Post editedPost = postService.editPost(post);
+        return new ResponseEntity<>(PostMapper.toDto(editedPost), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

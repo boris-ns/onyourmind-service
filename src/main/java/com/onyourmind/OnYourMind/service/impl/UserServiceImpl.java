@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -55,46 +54,50 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDTO findById(Long id) {
-        return new UserDTO(getUserFromRepository(id));
+    public User findById(Long id) {
+        try {
+            User user = userRepository.findById(id).get();
+            return user;
+        } catch (NoSuchElementException e) {
+            throw new ResourceNotFoundException("User with ID " + id + " doesn't exist");
+        }
     }
 
     @Override
-    public UserDTO findByUsername(String username) throws ApiRequestException {
+    public User findByUsername(String username) throws ApiRequestException {
         User user = userRepository.findByUsername(username);
 
         if (user == null)
             throw new ApiRequestException("User with username '" + username + "' doesn't exist.");
 
-        return new UserDTO(user);
+        return user;
     }
 
     @Override
-    public List<UserDTO> findAll() throws AccessDeniedException {
-        return userRepository.findAll().stream()
-                .map(user -> new UserDTO(user)).collect(Collectors.toList());
+    public List<User> findAll() throws AccessDeniedException {
+        return userRepository.findAll();
     }
 
     @Override
-    public UserDTO addRegularUser(UserRegistrationDTO userInfo) {
+    public User addRegularUser(UserRegistrationDTO userInfo) {
         User user = this.createNewUserObject(userInfo, UserRoles.ROLE_USER);
         userRepository.save(user);
 
         ConfirmationToken token = this.createConfirmationToken(user);
         mailSenderService.sendMailForRegistration(user, token);
 
-        return new UserDTO(user);
+        return user;
     }
 
     @Override
-    public UserDTO addAdminUser(UserRegistrationDTO userInfo) {
+    public User addAdminUser(UserRegistrationDTO userInfo) {
         User user = this.createNewUserObject(userInfo, UserRoles.ROLE_ADMIN);
         userRepository.save(user);
 
         ConfirmationToken token = this.createConfirmationToken(user);
         mailSenderService.sendMailForRegistration(user, token);
 
-        return new UserDTO(user);
+        return user;
     }
 
     private ConfirmationToken createConfirmationToken(User user) {
@@ -147,20 +150,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changeUserEnabledStatus(Long id, boolean status) {
-        User user = this.getUserFromRepository(id);
+        User user = this.findById(id);
         user.setEnabled(status);
         userRepository.save(user);
     }
 
     @Override
-    public UserDTO editUser(UserDTO user) {
+    public User editUser(UserDTO user) {
         User userInfo = userHelper.getCurrentUser();
 
         userInfo.setFirstName(user.getFirstName());
         userInfo.setLastName(user.getLastName());
         userInfo.setEmail(user.getEmail());
 
-        return new UserDTO(userInfo);
+        return userInfo;
     }
 
     @Override
@@ -168,14 +171,5 @@ public class UserServiceImpl implements UserService {
         User user = userHelper.getCurrentUser();
         user.setProfileImagePath(imagePath);
         userRepository.save(user);
-    }
-
-    public User getUserFromRepository(Long id) throws ResourceNotFoundException {
-        try {
-            User user = userRepository.findById(id).get();
-            return user;
-        } catch (NoSuchElementException e) {
-            throw new ResourceNotFoundException("User with ID " + id + " doesn't exist");
-        }
     }
 }

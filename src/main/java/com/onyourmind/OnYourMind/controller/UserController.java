@@ -2,6 +2,8 @@ package com.onyourmind.OnYourMind.controller;
 
 import com.onyourmind.OnYourMind.dto.UserDTO;
 import com.onyourmind.OnYourMind.dto.UserRegistrationDTO;
+import com.onyourmind.OnYourMind.mappers.UserMapper;
+import com.onyourmind.OnYourMind.model.User;
 import com.onyourmind.OnYourMind.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,32 +23,34 @@ public class UserController {
 
     @GetMapping("/public/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+        User user = userService.findById(id);
+        return new ResponseEntity<>(UserMapper.toDto(user), HttpStatus.OK);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+        List<User> users = userService.findAll();
+        return new ResponseEntity<>(UserMapper.toListDto(users), HttpStatus.OK);
     }
 
     @PostMapping("/public/add-user")
     public ResponseEntity<UserDTO> addRegularUser(@Valid @RequestBody UserRegistrationDTO userInfo) {
-        UserDTO user = userService.addRegularUser(userInfo);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        User user = userService.addRegularUser(userInfo);
+        return new ResponseEntity<>(UserMapper.toDto(user), HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO user) {
-        UserDTO newUserInfo = userService.editUser(user);
-        return new ResponseEntity<>(newUserInfo, HttpStatus.OK);
+        User newUserInfo = userService.editUser(user);
+        return new ResponseEntity<>(UserMapper.toDto(newUserInfo), HttpStatus.OK);
     }
 
     @PostMapping("/add-admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> addAdminUser(@RequestBody UserRegistrationDTO userInfo) {
-        UserDTO user = userService.addAdminUser(userInfo);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        User user = userService.addAdminUser(userInfo);
+        return new ResponseEntity<>(UserMapper.toDto(user), HttpStatus.OK);
     }
 
     @GetMapping("/public/verify/{token}")
