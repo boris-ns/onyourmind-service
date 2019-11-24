@@ -3,14 +3,12 @@ package com.onyourmind.OnYourMind.controller;
 import com.onyourmind.OnYourMind.dto.PasswordChanger;
 import com.onyourmind.OnYourMind.dto.UserDTO;
 import com.onyourmind.OnYourMind.model.UserTokenState;
-import com.onyourmind.OnYourMind.security.TokenUtils;
 import com.onyourmind.OnYourMind.security.auth.JwtAuthenticationRequest;
 import com.onyourmind.OnYourMind.service.impl.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,14 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthenticationController {
 
     @Autowired
-    private TokenUtils tokenUtils;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private CustomUserDetailsService userDetailsService;
-
 
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(@RequestBody JwtAuthenticationRequest authenticationRequest) {

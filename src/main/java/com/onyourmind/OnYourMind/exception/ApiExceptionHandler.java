@@ -17,7 +17,7 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorMessage, badRequest);
     }
 
-    @ExceptionHandler(value = {ResourceNotFoundException.class})
+    @ExceptionHandler(value = {ResourceNotFoundException.class, UserNotFoundException.class})
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException e) {
         HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
         ErrorMessage errorMessage = new ErrorMessage(e.getMessage(), notFoundStatus, ZonedDateTime.now());

@@ -7,6 +7,7 @@ import com.onyourmind.OnYourMind.dto.UserDTO;
 import com.onyourmind.OnYourMind.dto.UserRegistrationDTO;
 import com.onyourmind.OnYourMind.exception.ApiRequestException;
 import com.onyourmind.OnYourMind.exception.ResourceNotFoundException;
+import com.onyourmind.OnYourMind.exception.UserNotFoundException;
 import com.onyourmind.OnYourMind.model.Authority;
 import com.onyourmind.OnYourMind.model.ConfirmationToken;
 import com.onyourmind.OnYourMind.model.User;
@@ -59,16 +60,16 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(id).get();
             return user;
         } catch (NoSuchElementException e) {
-            throw new ResourceNotFoundException("User with ID " + id + " doesn't exist");
+            throw new UserNotFoundException("User with ID " + id + " doesn't exist");
         }
     }
 
     @Override
-    public User findByUsername(String username) throws ApiRequestException {
+    public User findByUsername(String username) {
         User user = userRepository.findByUsername(username);
 
         if (user == null)
-            throw new ApiRequestException("User with username '" + username + "' doesn't exist.");
+            throw new UserNotFoundException("User with username '" + username + "' doesn't exist.");
 
         return user;
     }
