@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
         User author = userHelper.getCurrentUser();
         newPost.setAuthor(author);
 
-        postRepository.save(newPost);
+        newPost = postRepository.save(newPost);
 
         return newPost;
     }

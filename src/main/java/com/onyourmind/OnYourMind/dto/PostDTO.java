@@ -1,8 +1,10 @@
 package com.onyourmind.OnYourMind.dto;
 
 import com.onyourmind.OnYourMind.model.Post;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
+@Setter
+@AllArgsConstructor
 public class PostDTO {
 
     private Long id;
