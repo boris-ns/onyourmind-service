@@ -3,11 +3,13 @@ package com.onyourmind.OnYourMind.dto;
 import com.onyourmind.OnYourMind.model.PostComment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @NoArgsConstructor
 @Getter
+@Setter
 public class PostCommentDTO {
 
     private Long id;

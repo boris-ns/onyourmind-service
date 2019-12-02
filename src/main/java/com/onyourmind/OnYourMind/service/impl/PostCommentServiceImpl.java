@@ -68,7 +68,7 @@ public class PostCommentServiceImpl implements PostCommentService {
         Post post = postService.findById(comment.getPostId());
         newComment.setPost(post);
 
-        postCommentRepository.save(newComment);
+        newComment = postCommentRepository.save(newComment);
 
         return newComment;
     }
